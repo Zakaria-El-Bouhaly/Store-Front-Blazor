@@ -1,0 +1,117 @@
+﻿@page "/Products"
+@using FrontStore.Model
+@using FrontStore.Services
+@inject ILogger<Product> Logger
+
+<button Color="Color.Primary" class="btn" onclick="@AddProduct">Add Product</button>
+
+
+<div class="row">
+    <div class="col-md-12 col-lg-12 col-sm-12">
+        <ProductList Products="productsList" OnEditProduct="EditProduct" OnDeleteProduct="DeleteProduct" />
+    </div>
+</div>
+
+
+<Modal @ref="modalRef">
+    <ModalContent Centered>      
+        <ModalBody>
+            <ProductForm Product="Product" OnSaveProduct="SaveProduct" Categories="categories"></ProductForm>
+        </ModalBody>
+    </ModalContent>
+</Modal>
+
+@code {
+    // reference to the modal component
+    private Modal modalRef;
+
+
+    private List<Product> productsList = new List<Product>();
+
+
+    [Inject]
+    private IProductService ProductService { get; set; }
+
+    [Inject]
+    private ICategoryService CategoryService { get; set; }
+
+    private Product Product = new Product();
+
+    public List<Category> categories = new List<Category>();
+
+    private Task AddProduct()
+    {
+        Product = new Product();
+        return modalRef.Show();
+    }
+
+    private Task HideModal()
+    {
+        return modalRef.Hide();
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Logger.LogInformation("Getting Products");
+        try
+        {
+            productsList = await ProductService.GetProductsAsync();
+            categories = await CategoryService.GetCategoriesAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError("Error getting Products: {0}", ex.Message);
+        }
+
+    }
+
+    private Task EditProduct(Product editProduct)
+    {
+        Product = editProduct;
+
+        Logger.LogInformation("Edit Product {0}", Product.Name);
+
+        return modalRef.Show();
+    }
+
+    private async Task DeleteProduct(int ProductId)
+    {
+        Logger.LogInformation("Delete Product {0}", ProductId);
+        try
+        {
+            await ProductService.DeleteProductAsync(ProductId);
+            productsList.RemoveAll(p => p.Id == ProductId);
+
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError("Error deleting Product: {0}", ex.Message);
+        }
+
+    }
+
+    private async Task SaveProduct(Product Product)
+    {
+        Logger.LogInformation("Save Product {0}", Product.Name);
+        try
+        {
+            if (Product.Id == 0)
+            {
+                await ProductService.CreateProductAsync(Product);
+                productsList.Add(Product);
+            }
+            else
+            {
+                await ProductService.UpdateProductAsync(Product);
+                var index = productsList.FindIndex(p => p.Id == Product.Id);
+                productsList[index] = Product;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError("Error saving Product: {0}", ex.Message);
+        }
+    }
+}

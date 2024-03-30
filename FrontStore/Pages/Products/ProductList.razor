@@ -1,0 +1,70 @@
+﻿@using FrontStore.Model
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Products</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Product in Products)
+                    {
+                        <tr>
+                            <td>@Product.Name</td>
+                            <td>@Product.Price</td>
+                            <td>@Product.Description</td>
+                            <td>@Product.Quantity</td>
+
+                            <td>
+                                <button class="btn btn-primary"
+                                        @onclick="() => EditProduct(Product)">
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger"
+                                        @onclick="() => DeleteProduct(Product.Id)">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+
+
+    [Parameter]
+    public List<Product> Products { get; set;}= new List<Product>();
+
+    [Parameter]
+    public EventCallback<Product> OnEditProduct { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDeleteProduct { get; set; }
+
+    [Parameter]
+    public List<Product> Categories { get; set; }
+
+    private void EditProduct(Product Product)
+    {
+        OnEditProduct.InvokeAsync(Product);
+    }
+
+    private void DeleteProduct(int ProductId)
+    {
+        OnDeleteProduct.InvokeAsync(ProductId);
+    }
+
+
+}

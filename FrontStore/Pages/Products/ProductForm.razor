@@ -1,0 +1,114 @@
+﻿@using Blazorise.Components
+@using FrontStore.Model;
+@using Newtonsoft.Json
+@inject ILogger<Product> Logger;
+
+
+<h3>
+    @if (Product.Id == 0)
+    {
+        <span>Add Product</span>
+    }
+    else
+    {
+        <span>Edit Product</span>
+    }
+</h3>
+
+<EditForm Model="@Product" OnSubmit="SaveProduct">
+
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <InputText id="name" class="form-control mb-2" @bind-Value="Product.Name" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <InputText id="description" class="form-control mb-2" @bind-Value="Product.Description" />
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price</label>
+        <InputNumber id="price" class="form-control mb-2" @bind-Value="Product.Price" />
+    </div>
+
+
+
+    <DropdownList TItem="Category" TValue="int"
+                  Data="@Categories"
+                  TextField="@((item)=>item.Name)"
+                  ValueField="@((item)=>item.Id)"
+                  SelectedValues="selectedCategories"
+                  SelectedValuesChanged="e=> selectedCategoriesChanged(e)"
+                  SelectionMode=" DropdownListSelectionMode.Checkbox"
+                  MaxMenuHeight="200px">
+        Select item
+    </DropdownList>
+
+
+
+
+    <button type="submit" class="btn btn-primary">
+
+        @if (Product.Id == 0)
+        {
+            <span>Add</span>
+        }
+        else
+        {
+            <span>Update</span>
+        }
+    </button>
+
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public Product Product { get; set; }
+
+    [Parameter]
+    public List<Category> Categories { get; set; }
+
+    private List<int> selectedCategories = new List<int>();
+
+    [Parameter]
+    public EventCallback<Product> OnSaveProduct { get; set; }
+
+
+
+    protected override void OnParametersSet()
+    {
+        selectedCategories = new List<int>();
+        Logger.LogInformation("ProductForm: OnParametersSet");
+        Logger.LogInformation("ProductForm: Product {Product}", JsonConvert.SerializeObject(Product));
+        Logger.LogInformation("ProductForm: Categories {Categories}", JsonConvert.SerializeObject(Categories));
+        if (Product.ProductCategories != null)
+        {
+            selectedCategories = Product.ProductCategories.Select(pc => pc.CategoryId).ToList();
+        }
+        Logger.LogInformation("ProductForm: selectedCategories {selectedCategories}", JsonConvert.SerializeObject(selectedCategories));
+    }
+   
+
+    private void selectedCategoriesChanged(IReadOnlyList<int> e)
+    {
+        Logger.LogInformation("ProductForm: selectedCategoriesChanged {e}", e);
+        selectedCategories = e.ToList();
+        Logger.LogInformation("ProductForm: selectedCategoriesChanged {selectedCategories}", selectedCategories);
+        Product.CategoryIds = selectedCategories;
+    }
+
+
+
+
+
+    private async Task SaveProduct()
+    {
+
+
+        await OnSaveProduct.InvokeAsync(this.Product);
+
+    }
+}

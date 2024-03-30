@@ -1,0 +1,51 @@
+﻿@page "/login"
+@using FrontStore.Model;
+@using FrontStore.Services
+@using Newtonsoft.Json
+@inject ILogger<LoginRequest> Logger
+@inject HttpClient Http
+
+<h1>Login</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+            <EditForm Model="@loginRequest" OnSubmit="SignIn">
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <InputText id="email" type="email" class="form-control" @bind-Value="loginRequest.Email" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <InputText type="password" class="form-control" @bind-Value="loginRequest.Password" />
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Login</button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [SupplyParameterFromForm]
+    private LoginRequest loginRequest { get; set; } = new LoginRequest();
+
+    [Inject]
+    public IAuthService AuthService { get; set; }
+
+    private async Task SignIn()
+    {
+        try
+        {
+            Logger.LogInformation("Login reques {0}", JsonConvert.SerializeObject(loginRequest));
+            await AuthService.SignIn(loginRequest);            
+
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError("Error while login {0}", ex.Message);
+        }
+
+
+    }
+}

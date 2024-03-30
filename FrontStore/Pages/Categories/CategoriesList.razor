@@ -1,0 +1,61 @@
+﻿@using FrontStore.Model
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Categories</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Categories)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        @onclick="() => EditCategory(category)">
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger"
+                                        @onclick="() => DeleteCategory(category.Id)">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private List<Category> categories = new List<Category>();
+
+    [Parameter]
+    public EventCallback<Category> OnEditCategory { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDeleteCategory { get; set; }
+
+    [Parameter]
+    public List<Category> Categories { get; set; }
+
+    private void EditCategory(Category category)
+    {
+        OnEditCategory.InvokeAsync(category);
+    }
+
+    private void DeleteCategory(int categoryId)
+    {
+        OnDeleteCategory.InvokeAsync(categoryId);
+    }
+
+
+}

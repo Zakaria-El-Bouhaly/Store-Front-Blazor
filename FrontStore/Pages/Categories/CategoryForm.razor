@@ -1,0 +1,38 @@
+﻿@using FrontStore.Model
+@inject ILogger<Category> Logger
+
+
+<EditForm Model="@Category" OnValidSubmit="@SaveCategory">
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <InputText id="name" class="form-control mb-2" @bind-Value="Category.Name" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+
+        @if (Category.Id == 0)
+        {
+            <span>Add</span>
+        }
+        else
+        {
+            <span>Update</span>
+        }
+    </button>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public Category Category { get; set; }
+
+    [Parameter]
+    public EventCallback<Category> OnSaveCategory { get; set; }
+
+    private async Task SaveCategory()
+    {
+        OnSaveCategory.InvokeAsync(this.Category);
+    }
+
+}
