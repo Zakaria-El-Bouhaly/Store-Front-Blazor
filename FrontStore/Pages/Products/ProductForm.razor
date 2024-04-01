@@ -80,17 +80,15 @@
 
     protected override void OnParametersSet()
     {
-        selectedCategories = new List<int>();
-        Logger.LogInformation("ProductForm: OnParametersSet");
-        Logger.LogInformation("ProductForm: Product {Product}", JsonConvert.SerializeObject(Product));
-        Logger.LogInformation("ProductForm: Categories {Categories}", JsonConvert.SerializeObject(Categories));
+        selectedCategories = new List<int>();       
         if (Product.ProductCategories != null)
         {
             selectedCategories = Product.ProductCategories.Select(pc => pc.CategoryId).ToList();
         }
-        Logger.LogInformation("ProductForm: selectedCategories {selectedCategories}", JsonConvert.SerializeObject(selectedCategories));
+        Product.Categories = null;
+        Product.ProductCategories = null;
     }
-   
+
 
     private void selectedCategoriesChanged(IReadOnlyList<int> e)
     {
@@ -105,9 +103,7 @@
 
 
     private async Task SaveProduct()
-    {
-
-
+    {   
         await OnSaveProduct.InvokeAsync(this.Product);
 
     }
