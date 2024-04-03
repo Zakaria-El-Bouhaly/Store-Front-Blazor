@@ -1,9 +1,16 @@
 ﻿@page "/Products"
 @using FrontStore.Model
 @using FrontStore.Services
-@inject ILogger<Product> Logger
+@using Microsoft.AspNetCore.Authorization
 
-<button Color="Color.Primary" class="btn" onclick="@AddProduct">Add Product</button>
+@attribute [Authorize(Roles = "Admin")]
+
+
+
+<button Color="Color.Primary" class="btn btn-primary
+" onclick="@AddProduct">
+    Add Product
+</button>
 
 
 <div class="row">
@@ -14,7 +21,7 @@
 
 
 <Modal @ref="modalRef">
-    <ModalContent Centered>      
+    <ModalContent Centered>
         <ModalBody>
             <ProductForm Product="Product" OnSaveProduct="SaveProduct" Categories="categories"></ProductForm>
         </ModalBody>
@@ -54,7 +61,7 @@
     protected override async Task OnInitializedAsync()
     {
 
-        Logger.LogInformation("Getting Products");
+
         try
         {
             productsList = await ProductService.GetProductsAsync();
@@ -62,7 +69,7 @@
         }
         catch (Exception ex)
         {
-            Logger.LogError("Error getting Products: {0}", ex.Message);
+            Console.WriteLine(ex.Message);
         }
 
     }
@@ -71,14 +78,12 @@
     {
         Product = editProduct;
 
-        Logger.LogInformation("Edit Product {0}", Product.Name);
-
         return modalRef.Show();
     }
 
     private async Task DeleteProduct(int ProductId)
     {
-        Logger.LogInformation("Delete Product {0}", ProductId);
+
         try
         {
             await ProductService.DeleteProductAsync(ProductId);
@@ -87,14 +92,14 @@
         }
         catch (Exception ex)
         {
-            Logger.LogError("Error deleting Product: {0}", ex.Message);
+            Console.WriteLine(ex.Message);
         }
 
     }
 
     private async Task SaveProduct(Product Product)
     {
-        Logger.LogInformation("Save Product {0}", Product.Name);
+       Console.WriteLine("Save Product {0}", Product.Name);
         try
         {
             if (Product.Id == 0)
@@ -104,14 +109,14 @@
             }
             else
             {
-                await ProductService.UpdateProductAsync(Product);
-                var index = productsList.FindIndex(p => p.Id == Product.Id);
-                productsList[index] = Product;
+                var updatedProduct = await ProductService.UpdateProductAsync(Product);
+                var index = productsList.FindIndex(p => p.Id == updatedProduct.Id);
+                productsList[index] = updatedProduct;
             }
         }
         catch (Exception ex)
         {
-            Logger.LogError("Error saving Product: {0}", ex.Message);
+            Console.WriteLine(ex.Message);
         }
     }
 }

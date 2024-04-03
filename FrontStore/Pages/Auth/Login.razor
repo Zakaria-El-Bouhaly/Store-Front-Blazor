@@ -1,29 +1,48 @@
 ﻿@page "/login"
 @using FrontStore.Model;
 @using FrontStore.Services
+@using Microsoft.AspNetCore.Components.Authorization
 @using Newtonsoft.Json
 @inject ILogger<LoginRequest> Logger
 @inject HttpClient Http
+@inject NavigationManager NavManager
 
-<h1>Login</h1>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-            <EditForm Model="@loginRequest" OnSubmit="SignIn">
+<CascadingAuthenticationState>
+    <AuthorizeView Context="authContext">
+        <Authorized>
+            @{
+                NavManager.NavigateTo("/");
+            }
+        </Authorized>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <InputText id="email" type="email" class="form-control" @bind-Value="loginRequest.Email" />
+        <NotAuthorized>
+            <h1>Login</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                        <EditForm Model="@loginRequest" OnSubmit="SignIn">
+
+                            <DataAnnotationsValidator />
+                          
+
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <InputText id="email" type="email" class="form-control" @bind-Value="loginRequest.Email" />
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <InputText type="password" class="form-control" @bind-Value="loginRequest.Password" />
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Login</button>
+                        </EditForm>
+                        <NavLink href="register">Don't have an account? Register</NavLink>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <InputText type="password" class="form-control" @bind-Value="loginRequest.Password" />
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Login</button>
-            </EditForm>
-        </div>
-    </div>
-</div>
+            </div>
+
+        </NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
 
 
 @code {
@@ -38,8 +57,7 @@
         try
         {
             Logger.LogInformation("Login reques {0}", JsonConvert.SerializeObject(loginRequest));
-            await AuthService.SignIn(loginRequest);            
-
+            await AuthService.SignIn(loginRequest);
         }
         catch (Exception ex)
         {

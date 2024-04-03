@@ -2,32 +2,29 @@
 @using FrontStore.Model
 @using FrontStore.Pages.Auth
 @using FrontStore.Services
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
-@inject ILogger<Category> Logger
 
-<AuthorizeView>
-    <Authorized>
-        <button Color="Color.Primary" class="btn" onclick="@AddCategory">Add Product</button>
+@attribute [Authorize(Roles = "Admin")]
 
 
-        <div class="row">
-            <div class="col-md-12 col-lg-12 col-sm-12">
-                <CategoriesList Categories="@categories" OnEditCategory="EditCategory" OnDeleteCategory="DeleteCategory" />
-            </div>
-        </div>
+<button Color="Color.Primary" class="btn btn-primary" onclick="@AddCategory">Add Category</button>
 
-        <Modal @ref="modalRef">
-            <ModalContent Centered>
-                <ModalBody>
-                    <CategoryForm Category="@category" OnSaveCategory="SaveCategory" />
-                </ModalBody>
-            </ModalContent>
-        </Modal>
-    </Authorized>
-    <NotAuthorized>
-        <Login />
-    </NotAuthorized>
-</AuthorizeView>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12 col-sm-12">
+        <CategoriesList Categories="@categories" OnEditCategory="EditCategory" OnDeleteCategory="DeleteCategory" />
+    </div>
+</div>
+
+<Modal @ref="modalRef">
+    <ModalContent Centered>
+        <ModalBody>
+            <CategoryForm Category="@category" OnSaveCategory="SaveCategory" />
+        </ModalBody>
+    </ModalContent>
+</Modal>
+
 
 
 
@@ -57,14 +54,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         try
         {
             categories = await CategoryService.GetCategoriesAsync();
         }
         catch (Exception ex)
         {
-            Logger.LogError("Error getting categories: {0}", ex.Message);
+            Console.WriteLine("Error loading categories: {0}", ex.Message);
         }
 
 
@@ -73,13 +70,12 @@
     private void EditCategory(Category editCategory)
     {
         category = editCategory;
-        Logger.LogInformation("Edit Category {0}", category.Name);
         modalRef.Show();
     }
 
     private async Task DeleteCategory(int categoryId)
     {
-        Logger.LogInformation("Delete Category {0}", categoryId);
+
         try
         {
             await CategoryService.DeleteCategoryAsync(categoryId);
@@ -87,7 +83,7 @@
         }
         catch (Exception ex)
         {
-            Logger.LogError("Error deleting category: {0}", ex.Message);
+            Console.WriteLine("Error deleting category: {0}", ex.Message);
         }
 
 
@@ -96,7 +92,7 @@
     private async Task SaveCategory(Category sumbittedCategory)
     {
 
-        Logger.LogInformation("Save Category {0}", sumbittedCategory.Name);
+
 
         if (sumbittedCategory.Id == 0)
         {
@@ -108,7 +104,7 @@
             }
             catch (Exception ex)
             {
-                Logger.LogError("Error adding category: {0}", ex.Message);
+                Console.WriteLine("Error adding category: {0}", ex.Message);
             }
         }
         else
@@ -122,7 +118,7 @@
             }
             catch (Exception ex)
             {
-                Logger.LogError("Error updating category: {0}", ex.Message);
+               Console.WriteLine("Error updating category: {0}", ex.Message);
             }
         }
 

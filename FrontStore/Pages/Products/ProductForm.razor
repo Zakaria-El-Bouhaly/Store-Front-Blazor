@@ -15,8 +15,10 @@
     }
 </h3>
 
-<EditForm Model="@Product" OnSubmit="SaveProduct">
+<EditForm Model="@Product" OnInvalidSubmit="SaveProduct">
 
+    <DataAnnotationsValidator />
+   
 
     <div class="form-group">
         <label for="name">Name</label>
@@ -80,13 +82,12 @@
 
     protected override void OnParametersSet()
     {
+        Logger.LogInformation("ProductForm: OnParametersSet {Product}", JsonConvert.SerializeObject(Product));
         selectedCategories = new List<int>();       
-        if (Product.ProductCategories != null)
+        if (Product.Categories != null)
         {
-            selectedCategories = Product.ProductCategories.Select(pc => pc.CategoryId).ToList();
-        }
-        Product.Categories = null;
-        Product.ProductCategories = null;
+            selectedCategories = Product.Categories.Select(x => x.Id).ToList();
+        }     
     }
 
 

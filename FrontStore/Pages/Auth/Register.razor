@@ -1,6 +1,84 @@
 ﻿@page "/register"
-<h3>register</h3>
+@using FrontStore.Model;
+@using FrontStore.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using Newtonsoft.Json
+@inject NavigationManager NavManager
+
+
+@inject HttpClient Http
+
+<CascadingAuthenticationState>
+    <AuthorizeView Context="authContext">
+
+        <Authorized>
+            @{
+                NavManager.NavigateTo("/");
+            }
+        </Authorized>
+
+        <NotAuthorized>
+            <h1>Register</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                        <EditForm Model="@registerRequest" OnValidSubmit="RegisterUser">
+
+                            <DataAnnotationsValidator />
+
+
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <InputText id="email" type="email" class="form-control" @bind-Value="registerRequest.Email" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <InputText type="password" class="form-control" @bind-Value="registerRequest.Password" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <InputText type="password" class="form-control" @bind-Value="registerRequest.ConfirmPassword" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <InputText type="text" class="form-control" @bind-Value="registerRequest.FullName" />
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-2">Register</button>
+
+
+                        </EditForm>
+
+                        <NavLink href="/login">Already have an account? Login</NavLink>
+                    </div>
+                </div>
+            </div>
+
+        </NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
+
 
 @code {
+    [SupplyParameterFromForm]
+    private RegisterRequest registerRequest { get; set; } = new RegisterRequest();
 
+    [Inject]
+    public IAuthService AuthService { get; set; }
+
+    private async Task RegisterUser()
+    {
+        try
+        {
+            Console.WriteLine("Register request {0}", JsonConvert.SerializeObject(registerRequest));
+            await AuthService.SignUp(registerRequest);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error while register {0}", ex.Message);
+        }
+    }
 }

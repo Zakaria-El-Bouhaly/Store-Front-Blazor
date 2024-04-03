@@ -5,17 +5,6 @@ namespace FrontStore.Model
     public class Product
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public int Quantity { get; set; }
-        public List<int> CategoryIds { get; set; }
-        public List<ProductCategory> ProductCategories { get; set; }
-        public List<Category> Categories { get; set; }
-    }
-
-    public class ProductRequest
-    {
         [Required]
         [MinLength(3, ErrorMessage = "Name is too short.")]
         public string Name { get; set; }
@@ -27,12 +16,12 @@ namespace FrontStore.Model
         public decimal Price { get; set; }
         [Required]
         [Range(1, 1000, ErrorMessage = "Quantity must be between 1 and 1000.")]
-        public int Quantity { get; set; }
-        [Required]
-        [MinLength(1, ErrorMessage = "Please select at least one category.")]
+        public int Quantity { get; set; }        
         public List<int> CategoryIds { get; set; }
+        public List<ProductCategory> ProductCategories { get; set; }
+        public List<Category> Categories { get; set; }
     }
-
+ 
     public class ProductCategory
     {
         public int ProductId { get; set; }
