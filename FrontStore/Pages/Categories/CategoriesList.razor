@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Categories</h1>
-            <table class="table table-striped">
+            <table class="table table-bordered border-primary">
                 <thead>
                     <tr>
                         <th>Category Name</th>
@@ -17,14 +17,9 @@
                         <tr>
                             <td>@category.Name</td>
                             <td>
-                                <button class="btn btn-primary"
-                                        @onclick="() => EditCategory(category)">
-                                    Edit
-                                </button>
-                                <button class="btn btn-danger"
-                                        @onclick="() => DeleteCategory(category.Id)">
-                                    Delete
-                                </button>
+                                <i class="fas fa-edit" @onclick="() => EditCategory(category)"></i>
+                                <i class="fas fa-trash" @onclick="() => DeleteCategory(category.Id)"></i>
+
                             </td>
                         </tr>
                     }

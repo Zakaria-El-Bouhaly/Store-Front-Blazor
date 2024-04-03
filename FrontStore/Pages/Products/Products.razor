@@ -1,7 +1,10 @@
 ﻿@page "/Products"
+@using CurrieTechnologies.Razor.SweetAlert2
 @using FrontStore.Model
 @using FrontStore.Services
 @using Microsoft.AspNetCore.Authorization
+@inject SweetAlertService Swal;
+
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -86,8 +89,22 @@
 
         try
         {
-            await ProductService.DeleteProductAsync(ProductId);
-            productsList.RemoveAll(p => p.Id == ProductId);
+            SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Are you sure?",
+                    Text = "Are you sure that you want to delete this product?",
+                    Icon = SweetAlertIcon.Warning,
+                    ShowCancelButton = true,
+                    ConfirmButtonText = "Yes, delete it!",
+                    CancelButtonText = "No, keep it"
+                });
+
+            if (result.IsConfirmed)
+            {
+
+                await ProductService.DeleteProductAsync(ProductId);
+                productsList.RemoveAll(p => p.Id == ProductId);
+            }
 
         }
         catch (Exception ex)
@@ -99,13 +116,14 @@
 
     private async Task SaveProduct(Product Product)
     {
-       Console.WriteLine("Save Product {0}", Product.Name);
+        Console.WriteLine("Save Product {0}", Product.Name);
         try
         {
             if (Product.Id == 0)
             {
-                await ProductService.CreateProductAsync(Product);
-                productsList.Add(Product);
+                var createdProduct = await ProductService.CreateProductAsync(Product);
+
+                productsList.Add(createdProduct);
             }
             else
             {

@@ -1,9 +1,12 @@
 ﻿@page "/categories"
+@using CurrieTechnologies.Razor.SweetAlert2
 @using FrontStore.Model
 @using FrontStore.Pages.Auth
 @using FrontStore.Services
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@inject SweetAlertService Swal;
+
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -78,8 +81,22 @@
 
         try
         {
-            await CategoryService.DeleteCategoryAsync(categoryId);
-            categories.RemoveAll(c => c.Id == categoryId);
+            SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Are you sure?",
+                    Text = "Are you sure that you want to delete this category?",
+                    Icon = SweetAlertIcon.Warning,
+                    ShowCancelButton = true,
+                    ConfirmButtonText = "Yes, delete it!",
+                    CancelButtonText = "No, keep it"
+                });
+
+            if (result.IsConfirmed)
+            {
+                await CategoryService.DeleteCategoryAsync(categoryId);
+                categories.RemoveAll(c => c.Id == categoryId);
+            }
+
         }
         catch (Exception ex)
         {
@@ -101,6 +118,7 @@
                 var addedCategory = await CategoryService.CreateCategoryAsync(sumbittedCategory);
                 categories.Add(addedCategory);
 
+
             }
             catch (Exception ex)
             {
@@ -118,7 +136,7 @@
             }
             catch (Exception ex)
             {
-               Console.WriteLine("Error updating category: {0}", ex.Message);
+                Console.WriteLine("Error updating category: {0}", ex.Message);
             }
         }
 

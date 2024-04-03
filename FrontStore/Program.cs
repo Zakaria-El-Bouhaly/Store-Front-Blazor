@@ -7,6 +7,7 @@ using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using CurrieTechnologies.Razor.SweetAlert2;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -36,5 +37,6 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<CustomAuthenticationStateProvider>());
+builder.Services.AddSweetAlert2(); ;
 
 await builder.Build().RunAsync();
