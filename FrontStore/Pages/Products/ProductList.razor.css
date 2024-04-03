@@ -18,3 +18,7 @@
 .fa-trash:hover {
     color: #bd2130;
 }
+
+.btn, .btn-primary {
+    border-radius: 20px;
+}

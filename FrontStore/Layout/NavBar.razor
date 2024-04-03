@@ -3,67 +3,65 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Store</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <CascadingAuthenticationState>
+        <a class="navbar-brand" href="/">
+            <img src="images/logo.png" alt="logo" width="40" height="40">
+        </a>
+
+        <CascadingAuthenticationState>
 
 
-                <ul class="navbar-nav">
+            <ul class="d-flex flex-row justify-content-between navbar-nav">
 
-                    <AuthorizeView>
-
-
-                        <NotAuthorized>
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="login">
-                                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
-                                </NavLink>
-                            </li>
+                <AuthorizeView>
 
 
-
-
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="register">
-                                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Register
-                                </NavLink>
-                            </li>
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="login">
+                                <span aria-hidden="true"></span> Login
+                            </NavLink>
+                        </li>
 
 
 
-                        </NotAuthorized>
 
-                        <Authorized>
-
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="Products">
-                                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Products
-                                </NavLink>
-                            </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="register">
+                                <span aria-hidden="true"></span> Register
+                            </NavLink>
+                        </li>
 
 
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="categories">
-                                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Categories
-                                </NavLink>
-                            </li>
 
-                            <li class="nav-item">
+                    </NotAuthorized>
 
-                                <Button Color="Color.Primary" class="btn btn-primary" onclick="@Logout">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </Button>
+                    <Authorized>
 
-                            </li>
-                        </Authorized>
-                    </AuthorizeView>
-                </ul>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Products">
+                                <span aria-hidden="true"></span> Products
+                            </NavLink>
+                        </li>
 
-            </CascadingAuthenticationState>
-        </div>
+
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="categories">
+                                <span aria-hidden="true"></span> Categories
+                            </NavLink>
+                        </li>
+
+                        <li class="nav-item">
+
+                            <Button Class="btn" onclick="@Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </Button>
+
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+            </ul>
+
+        </CascadingAuthenticationState>
     </div>
 </nav>
 

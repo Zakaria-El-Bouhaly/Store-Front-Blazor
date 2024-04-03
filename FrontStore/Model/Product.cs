@@ -16,7 +16,8 @@ namespace FrontStore.Model
         public decimal Price { get; set; }
         [Required]
         [Range(1, 1000, ErrorMessage = "Quantity must be between 1 and 1000.")]
-        public int Quantity { get; set; }        
+        public int Quantity { get; set; }
+        [Required]        
         public List<int> CategoryIds { get; set; }
         public List<ProductCategory> ProductCategories { get; set; }
         public List<Category> Categories { get; set; }

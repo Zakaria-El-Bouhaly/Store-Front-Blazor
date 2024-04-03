@@ -6,7 +6,7 @@
 <EditForm Model="@Category" OnValidSubmit="@SaveCategory">
 
     <DataAnnotationsValidator />
-     
+
 
     <div class="form-group">
         <label for="name">Name</label>
@@ -16,13 +16,13 @@
     <button type="submit" class="btn btn-primary">
 
         @if (Category.Id == 0)
-            {
-        <span>Add</span>
-            }
-            else
-            {
-        <span>Update</span>
-            }
+        {
+            <span>Add</span>
+        }
+        else
+        {
+            <span>Update</span>
+        }
     </button>
 </EditForm>
 

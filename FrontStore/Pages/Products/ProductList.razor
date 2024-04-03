@@ -19,15 +19,15 @@
                     @foreach (var Product in Products)
                     {
                         <tr>
-                            <td>@Product.Name</td>
-                            <td>@Product.Price</td>
-                            <td>@Product.Description</td>
-                            <td>@Product.Quantity</td>
+                            <td>@Product?.Name</td>
+                            <td>@Product?.Price</td>
+                            <td>@Product?.Description</td>
+                            <td>@Product?.Quantity</td>
 
                             <td>
-                                @foreach (var Category in Product.Categories)
+                                @foreach (var Category in Product?.Categories)
                                 {
-                                    <span class="badge badge-secondary ml-1">@Category.Name</span>
+                                    <span class="badge badge-secondary ml-1">@Category?.Name</span>
                                 }
                             </td>
 

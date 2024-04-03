@@ -1,4 +1,5 @@
 ﻿@page "/Products"
+<PageTitle>Products</PageTitle>
 @using CurrieTechnologies.Razor.SweetAlert2
 @using FrontStore.Model
 @using FrontStore.Services
@@ -131,10 +132,27 @@
                 var index = productsList.FindIndex(p => p.Id == updatedProduct.Id);
                 productsList[index] = updatedProduct;
             }
+            await HideModal();
+
+            await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Success",
+                    Text = "Product saved successfully",
+                    Icon = SweetAlertIcon.Success
+                });
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
+
+            await HideModal();
+
+            await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error",
+                    Text = "Error saving product",
+                    Icon = SweetAlertIcon.Error
+                });
         }
     }
 }
