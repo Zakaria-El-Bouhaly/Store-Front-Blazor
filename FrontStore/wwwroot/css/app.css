@@ -11,11 +11,37 @@ a, .btn-link {
 }
 
 
-.btn-primary {
+.btn, .btn-primary {
     background-color: #0071c1;
     border-color: #0071c1;
-    border-radius:20px;
+    border-radius: 20px;
 }
+
+
+
+i {
+    font-size: 1.1em;
+    color: white;
+}
+
+.fa-edit {
+    color: #519ced;
+    cursor: pointer;
+}
+
+.fa-trash {
+    color: #e6226a;
+    cursor: pointer;
+}
+
+.fa-edit:hover {
+    color: #0056b3;
+}
+
+.fa-trash:hover {
+    color: #bd2130;
+}
+
 
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {

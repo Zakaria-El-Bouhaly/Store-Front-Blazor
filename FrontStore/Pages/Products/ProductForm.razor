@@ -18,26 +18,31 @@
 <EditForm Model="@Product" OnValidSubmit="SaveProduct">
 
     <DataAnnotationsValidator />
+    
 
 
     <div class="form-group">
         <label for="name">Name</label>
         <InputText id="name" class="form-control mb-2" @bind-Value="Product.Name" />
+        <ValidationMessage For="@(() => Product.Name)" />
     </div>
 
     <div class="form-group">
         <label for="description">Description</label>
         <InputText id="description" class="form-control mb-2" @bind-Value="Product.Description" />
+        <ValidationMessage For="@(() => Product.Description)" />
     </div>
 
     <div class="form-group">
         <label for="price">Price</label>
         <InputNumber id="price" class="form-control mb-2" @bind-Value="Product.Price" />
+        <ValidationMessage For="@(() => Product.Price)" />
     </div>
 
     <div class="form-group">
         <label for="quantity">Quantity</label>
         <InputNumber id="quantity" class="form-control mb-2" @bind-Value="Product.Quantity" />
+        <ValidationMessage For="@(() => Product.Quantity)" />
     </div>
 
 
@@ -54,11 +59,12 @@
                   MaxMenuHeight="200px">
         Select item
     </DropdownList>
+    <ValidationMessage For="@(() => Product.CategoryIds)" />
 
 
 
 
-    <button type="submit" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary mt-2">
 
         @if (Product.Id == 0)
         {

@@ -11,6 +11,7 @@
     <div class="form-group">
         <label for="name">Name</label>
         <InputText id="name" class="form-control mb-2" @bind-Value="Category.Name" />
+        <ValidationMessage For="@(() => Category.Name)" />
     </div>
 
     <button type="submit" class="btn btn-primary">
