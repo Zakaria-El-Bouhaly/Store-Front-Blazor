@@ -11,7 +11,6 @@
     <PackageReference Include="Blazorise.Bootstrap" Version="1.5.0" />
     <PackageReference Include="Blazorise.Components" Version="1.5.1" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.5.0" />
-    <PackageReference Include="Intersoft.Crosslight" Version="6.0.5000.975" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />

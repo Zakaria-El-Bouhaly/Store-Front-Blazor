@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using FrontStore.Model;
 using Microsoft.AspNetCore.Components.Authorization;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -8,40 +9,41 @@ namespace FrontStore.Services
 {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private AuthResponse _authResponse;
-        public string Token { get; private set; }
 
-        public void Login(AuthResponse authResponse)
+        public ILocalStorageService _localStorageService { get; set; }
+
+        public CustomAuthenticationStateProvider(ILocalStorageService localStorageService)
         {
-            _authResponse = authResponse;
-            Token = authResponse.Token;
+            _localStorageService = localStorageService;
+        }
+
+        public async Task Login(AuthResponse authResponse)
+        {
+            await _localStorageService.SetItemAsync("user", authResponse.User);
+            await _localStorageService.SetItemAsync("token", authResponse.Token);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
         public async Task Logout()
         {
-            _authResponse = null;
-            Token = null;
-
-            // add claims to context
-
-
-
+            await _localStorageService.RemoveItemAsync("user");
+            await _localStorageService.RemoveItemAsync("token");
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
+            string token = await _localStorageService.GetItemAsync<string>("token");
 
-            if (_authResponse == null || string.IsNullOrWhiteSpace(Token))
+            if (String.IsNullOrWhiteSpace(token))
             {
-                return Task.FromResult(new AuthenticationState(new ClaimsPrincipal()));
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 
             // deserialize the token, extract the claims and build a ClaimsPrincipal
-            var claimsPrincipal = BuildClaimsPrincipal(_authResponse.Token);
+            var claimsPrincipal = BuildClaimsPrincipal(token);
 
-            return Task.FromResult(new AuthenticationState(claimsPrincipal));
+            return new AuthenticationState(claimsPrincipal);
 
         }
 

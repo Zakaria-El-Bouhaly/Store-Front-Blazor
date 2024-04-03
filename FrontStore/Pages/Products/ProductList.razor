@@ -11,6 +11,7 @@
                         <th>Price</th>
                         <th>Description</th>
                         <th>Quantity</th>
+                        <th>Categories</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -24,14 +25,18 @@
                             <td>@Product.Quantity</td>
 
                             <td>
-                                <button class="btn btn-primary"
-                                        @onclick="() => EditProduct(Product)">
-                                    Edit
-                                </button>
-                                <button class="btn btn-danger"
-                                        @onclick="() => DeleteProduct(Product.Id)">
-                                    Delete
-                                </button>
+                                @foreach (var Category in Product.Categories)
+                                {
+                                    <span class="badge badge-secondary ml-1">@Category.Name</span>
+                                }
+                            </td>
+
+                            <td>
+
+                                <i class="fas fa-edit" @onclick="() => EditProduct(Product)"></i>
+
+                                <i class="fas fa-trash" @onclick="() => DeleteProduct(Product.Id)"></i>
+
                             </td>
                         </tr>
                     }
@@ -45,7 +50,7 @@
 
 
     [Parameter]
-    public List<Product> Products { get; set;}= new List<Product>();
+    public List<Product> Products { get; set; } = new List<Product>();
 
     [Parameter]
     public EventCallback<Product> OnEditProduct { get; set; }

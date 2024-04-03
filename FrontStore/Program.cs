@@ -7,7 +7,6 @@ using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -16,16 +15,13 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 
 
-builder.Services.AddHttpClient<ICategoryService, CategoryService>(
-    client => client.BaseAddress = new Uri(builder.Configuration["BaseUrl"]));
-
-builder.Services.AddHttpClient<IProductService, ProductService>(
-    client => client.BaseAddress = new Uri(builder.Configuration["BaseUrl"]));
+builder.Services.AddScoped(
+    sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["BaseUrl"]) });
 
 
-builder.Services.AddHttpClient<IAuthService, AuthService>(
-       client => client.BaseAddress = new Uri(builder.Configuration["BaseUrl"]));
-
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 
 builder.Services
@@ -33,14 +29,12 @@ builder.Services
     {
         options.Immediate = true;
     })
-    .AddBootstrapProviders()
-    .AddFontAwesomeIcons();
+.AddBootstrapProviders()
+.AddFontAwesomeIcons();
 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
-
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<CustomAuthenticationStateProvider>());
-builder.Services.AddScoped(provider => new JwtMiddleware(provider.GetRequiredService<CustomAuthenticationStateProvider>()));
 
 await builder.Build().RunAsync();
