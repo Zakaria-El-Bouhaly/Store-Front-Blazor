@@ -15,10 +15,25 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 
+builder.Services.AddScoped<AuthorizationMessageHandler>();
 
-builder.Services.AddScoped(
-    sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["BaseUrl"]) });
 
+
+builder.Services.AddHttpClient("ServerAPI", client => client.BaseAddress =
+    new Uri(builder.Configuration["BaseUrl"])
+
+    )
+    .AddHttpMessageHandler<AuthorizationMessageHandler>();
+
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+    .CreateClient("ServerAPI"));
+
+
+//builder.Services.AddScoped(
+//    sp => new HttpClient
+//    {
+//        BaseAddress = new Uri(builder.Configuration["BaseUrl"])
+//    });
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
