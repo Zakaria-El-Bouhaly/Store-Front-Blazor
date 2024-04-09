@@ -22,8 +22,8 @@ builder.Services.AddScoped<AuthorizationMessageHandler>();
 builder.Services.AddHttpClient("ServerAPI", client => client.BaseAddress =
     new Uri(builder.Configuration["BaseUrl"])
 
-    )
-    .AddHttpMessageHandler<AuthorizationMessageHandler>();
+    );
+    //.AddHttpMessageHandler<AuthorizationMessageHandler>();
 
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
     .CreateClient("ServerAPI"));
